@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  angular-client:
+    build:
+      context: ./angular-rest-client
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200" # Angular будет доступен на http://localhost:4200
+    depends_on:
+      - server
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000" # API-сервер доступен на http://localhost:3000
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:6.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+
+volumes:
+  mongo-data:
