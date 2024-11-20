@@ -1,48 +1,46 @@
 const express = require('express');
 const router = express.Router();
-const Author = require('../models/author');
-const Book = require('../models/book');
+const Contact = require('../my-dream-app1/src/app/models/Contact');
 
-// Добавление автора
-router.post('/authors', async (req, res) => {
+// Получение всех контактов
+router.get('/', async (req, res) => {
   try {
-    const author = new Author(req.body);
-    await author.save();
-    res.status(201).send(author);
-  } catch (error) {
-    res.status(400).send(error);
+    const contacts = await Contact.find();
+    res.json(contacts);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
-// Получение всех авторов
-router.get('/authors', async (req, res) => {
+// Создание нового контакта
+router.post('/', async (req, res) => {
+  const contact = new Contact(req.body);
   try {
-    const authors = await Author.find();
-    res.status(200).send(authors);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-// Добавление книги
-router.post('/books', async (req, res) => {
-  try {
-    const book = new Book(req.body);
-    await book.save();
-    res.status(201).send(book);
-  } catch (error) {
-    res.status(400).send(error);
-  }
-});
-
-// Получение всех книг
-router.get('/books', async (req, res) => {
-  try {
-    const books = await Book.find().populate('author');
-    res.status(200).send(books);
-  } catch (error) {
-    res.status(500).send(error);
+    const newContact = await contact.save();
+    res.status(201).json(newContact);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 });
 
 module.exports = router;
+// Обновление контакта по ID
+router.put('/:id', async (req, res) => {
+  try {
+    const updatedContact = await Contact.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedContact) return res.status(404).json({ message: 'Contact not found' });
+    res.json(updatedContact);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+// Удаление контакта по ID
+router.delete('/:id', async (req, res) => {
+    try {
+      const deletedContact = await Contact.findByIdAndDelete(req.params.id);
+      if (!deletedContact) return res.status(404).json({ message: 'Contact not found' });
+      res.json({ message: 'Contact deleted' });
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  });

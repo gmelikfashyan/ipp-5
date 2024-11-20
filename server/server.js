@@ -6,7 +6,7 @@ const apiRoutes = require('./routes/api');
 
 const app = express();
 const PORT = 3000;
-const MONGO_URI = 'mongodb://mongodb:27017/mean-books';
+const MONGO_URI = 'mongodb://mongodb:27017/mean-contacts';
 
 // Middleware
 app.use(cors());

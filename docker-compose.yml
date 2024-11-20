@@ -3,7 +3,7 @@ version: '3.8'
 services:
   angular-client:
     build:
-      context: ./angular-rest-client
+      context: ./angular-client/ipp-52
       dockerfile: Dockerfile
     ports:
       - "4200:4200" # Angular будет доступен на http://localhost:4200
